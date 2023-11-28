@@ -24,7 +24,9 @@ $(document).ready(function() {
             headers: { "X-CSRFToken": getCookie("csrftoken") },  // Include the CSRF token in the headers
             success: function(data) {
                 $("#container-to-update").html(data.html);
-            },
+                $("#preview-submit-tasks").trigger('reset');
+                $("#preview-submit-tasks").hide(); // Add this line to hide the form after submission
+                        },
             error: function(error) {
                 console.log(error);
             }
@@ -50,3 +52,15 @@ taskItems.forEach(function(taskItem) {
 // Send the JSON object as a response
 var jsonData = JSON.stringify(tasksData);
 console.log(jsonData);  // You can use this data as needed, for example, sending it via AJAX
+
+
+function truncateText(selector, maxLength) {
+    var elements = document.querySelectorAll(selector);
+    elements.forEach(function(element) {
+        if (element.textContent.length > maxLength) {
+            element.textContent = element.textContent.substr(0, maxLength) + '...';
+        }
+    });
+}
+
+truncateText('.description', 50);
