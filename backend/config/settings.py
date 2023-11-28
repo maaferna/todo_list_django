@@ -1,6 +1,9 @@
 from pathlib import Path
 import os
+import sys
+from dotenv import load_dotenv
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -9,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_@!3del3b7zege44j8*46eo$k_im)j85%j0c4+e^6gtexff-h5'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -65,10 +68,26 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME', ''),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+    'test': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'todo_db_test',  # Replace with your test database name
+        'USER': 'testuser',  # Replace with your test database user
+        'PASSWORD': 'claveadmintest',  # Replace with your test database password
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
 }
+
+# Use the 'test' database when running tests
+if 'test' in sys.argv:
+    DATABASES['default'] = DATABASES['test']
 
 
 # Password validation
