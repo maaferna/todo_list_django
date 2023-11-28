@@ -7,6 +7,10 @@ name = "pypi"
 django = "*"
 psycopg2 = "*"
 python-dotenv = "*"
+django-crispy-forms = "*"
+django-fontawesome-5 = "*"
+django-bootstrap5 = "*"
+crispy-bootstrap5 = "*"
 
 [dev-packages]
 
