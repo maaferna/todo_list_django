@@ -8,7 +8,7 @@ class TaskForm(forms.ModelForm):
         # You can customize the widgets or add extra validation if needed
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter title here'}),
-            'description': forms.Textarea(attrs={'placeholder': 'Enter description here'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Enter description here', 'class': 'custom-description-field'}),
             'priority': forms.Select(attrs={'class': 'custom-select'}),
             'effort': forms.Select(attrs={'class': 'custom-select'}),
         }

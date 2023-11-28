@@ -1,0 +1,18 @@
+{# task_list_partial.html #}
+
+{% load static %}
+
+{% for task in tasks %}
+    <div class="task-item" data-task-id="{{ task.id }}">
+        <h4>{{ task.title }}</h4>
+        <p>{{ task.description }}</p>
+        <p>Priority: {{ task.priority }}</p>
+        <p>Effort: {{ task.effort }}</p>
+        <!-- Add more task details as needed -->
+
+        <!-- You can add buttons or links for additional actions -->
+        <button class="edit-task" data-task-id="{{ task.id }}">Edit</button>
+        <button class="delete-task" data-task-id="{{ task.id }}">Delete</button>
+    </div>
+{% endfor %}
+

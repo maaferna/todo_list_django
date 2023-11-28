@@ -1,6 +1,5 @@
-# todo_app/models.py
-
 from django.db import models
+from django.contrib.auth.models import User
 
 class Task(models.Model):
     PRIORITY_CHOICES = [
@@ -19,6 +18,8 @@ class Task(models.Model):
     ]
 
     title = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+
     description = models.TextField(blank=True, null=True)  # Added description field
     completed = models.BooleanField(default=False)
     priority = models.CharField(max_length=10, choices=PRIORITY_CHOICES, default='')
