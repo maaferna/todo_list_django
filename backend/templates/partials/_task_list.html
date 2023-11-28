@@ -2,17 +2,22 @@
 
 {% load static %}
 
-{% for task in tasks %}
-    <div class="task-item" data-task-id="{{ task.id }}">
-        <h4>{{ task.title }}</h4>
-        <p>{{ task.description }}</p>
-        <p>Priority: {{ task.priority }}</p>
-        <p>Effort: {{ task.effort }}</p>
-        <!-- Add more task details as needed -->
-
-        <!-- You can add buttons or links for additional actions -->
-        <button class="edit-task" data-task-id="{{ task.id }}">Edit</button>
-        <button class="delete-task" data-task-id="{{ task.id }}">Delete</button>
+<div class="container mt-4">
+    <div class="row">
+        {% for task in tasks %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ task.title }}</h5>
+                        <p class="card-text description-text">{{ task.description }}</p>
+                        <p class="card-text">Priority: {{ task.priority }}</p>
+                        <p class="card-text">Effort: {{ task.effort }}</p>
+                        <button class="btn btn-primary edit-task" data-task-id="{{ task.id }}">Edit</button>
+                        <button class="btn btn-danger delete-task" data-task-id="{{ task.id }}">Delete</button>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-{% endfor %}
+</div>
 

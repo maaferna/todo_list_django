@@ -12,3 +12,13 @@
 .custom-description-field {
     height: 3rem; /* Adjust the height as needed */
 }
+
+.description {
+    height: 100px; /* set a fixed height for the description field */
+    overflow-y: auto; /* enable scrolling when the content exceeds the height */
+}
+
+.description-text {
+    height: 4rem; /* set a fixed max-height for the task.description element */
+    overflow-y: auto; /* enable scrolling when the content exceeds the max-height */
+}
