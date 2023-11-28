@@ -25,7 +25,7 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/SimpleLightbox/2.1.0/simpleLightbox.min.css" rel="stylesheet" />
         <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 
-    <body id="page-top">
+    <body id="page-top" {% block body_attributes %}{% endblock %}>
         {% block navbar %}
             {% include 'partials/_header.html' %}
         {% endblock %}
@@ -39,6 +39,6 @@
         {% block js %}
         {% endblock %}
 
-        <script src="{% static 'js/scripts.js' %}"></script>
+        <script src="{% static 'js/script.js' %}"></script>
     </body>
 </html>

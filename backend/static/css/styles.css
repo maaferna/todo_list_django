@@ -1,0 +1,14 @@
+.form-container {
+    border: 2px solid #ccc;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.form-title {
+    margin-bottom: 20px;
+}
+
+.custom-description-field {
+    height: 3rem; /* Adjust the height as needed */
+}

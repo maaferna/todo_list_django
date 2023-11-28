@@ -1,13 +1,36 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
-
+{% block body_attributes %}
+    data-home-url="{% url 'home' %}"
+{% endblock %}
 
 {% block content %}
-<h2>Add a Task</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.title|as_crispy_field }}
-    <button type="submit" class="btn btn-primary">Add Task</button>
-</form>
+<div class="container form-container">
+    <div class="row">
+        <h2>Add a Task</h2>
+    </div>
+    <form method="post"  id="add-task-form">
+        {% csrf_token %}
+        <div class="row">
+            {{ form.title|as_crispy_field }}
+        </div>
+        <div class="row">
+            {{ form.description|as_crispy_field }}
+        </div>
+        <div class="row">
+            <div class="col-6">
+                {{ form.priority|as_crispy_field }}
+            </div>
+            <div class="col-6">
+                {{ form.effort|as_crispy_field }}
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary" id="add-task-btn">Add Task</button>
+    </form>
+</div>
+
+<div class="container" id="container-to-update">
+
+</div>
 {% endblock %}
