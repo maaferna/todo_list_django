@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
 
 from .models import Task
@@ -16,9 +16,17 @@ def home(request):
             task.save()
             tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
             html = render_to_string('partials/_task_list.html', {'tasks': tasks})
-            return JsonResponse({'html': html})
+            message = "Task successfully saved!"  # Add your desired success message
+            return JsonResponse({'html': html, 'message': message})
     else:
         form = TaskForm()
     return render(request, 'todo/home.html', {'form': form, 'tasks': tasks})
 
-
+def delete_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    task.delete()
+    tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
+    print(tasks)
+    html = render_to_string('partials/_task_list.html', {'tasks': tasks})
+    print(html)
+    return JsonResponse({'html': html})

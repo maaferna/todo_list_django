@@ -26,12 +26,45 @@ $(document).ready(function() {
                 $("#container-to-update").html(data.html);
                 $("#preview-submit-tasks").trigger('reset');
                 $("#preview-submit-tasks").hide(); // Add this line to hide the form after submission
-                        },
+                // Display the success message
+                var alertDiv = $('<div class="alert alert-success" role="alert">' + data.message + '</div>');
+                $("#container-to-update").prepend(alertDiv);
+
+                // Automatically hide the alert after 3 seconds (adjust as needed)
+                setTimeout(function() {
+                    alertDiv.slideUp();
+                }, 3000);
+                },
             error: function(error) {
                 console.log(error);
             }
         });
     });
+
+    $(document).on("click", ".delete-task", function() {
+        var taskId = $(this).data("task-id");
+    
+        $.ajax({
+            type: "POST",
+            url: "/delete_task/" + taskId + "/",
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
+            success: function(data) {
+                console.log(data.html);
+    
+                // Use native JavaScript to update the container
+                var containerToUpdate = document.getElementById("container-to-update");
+                if (containerToUpdate) {
+                    containerToUpdate.innerHTML = data.html;
+                } else {
+                    console.error("Container not found");
+                }
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+    
 });
 
 
