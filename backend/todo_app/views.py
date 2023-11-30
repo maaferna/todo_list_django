@@ -1,6 +1,7 @@
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
+from django.urls import reverse
 
 from .models import Task
 from .forms import TaskForm
@@ -24,9 +25,29 @@ def home(request):
 
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
+    title = task.title  # Get the title before deletion
     task.delete()
     tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
-    print(tasks)
     html = render_to_string('partials/_task_list.html', {'tasks': tasks})
-    print(html)
-    return JsonResponse({'html': html})
+    return JsonResponse({'html': html, 'title': title})
+
+
+def edit_task(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    title = task.title  # Get the title before edition
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            form.save()
+            # Return a success message or an updated task list
+            tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
+            html = render_to_string('partials/_task_list.html', {'tasks': tasks})
+            home_url = reverse('home')  # Assuming 'home' is the name of your home URL pattern
+            print("Console log the home: ", home_url)
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                # If the request is an AJAX request, return a JSON response
+                return JsonResponse({'html': html, 'title': title, 'home_url': home_url})
+            else:
+                # If the request is not an AJAX request, redirect to the home URL
+                return redirect(home_url)

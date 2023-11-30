@@ -1,4 +1,19 @@
 $(document).ready(function() {
+    // Function to show a popup message with a specific color
+    function showPopupMessage(message, color) {
+        var alertDiv = document.createElement("div");
+        alertDiv.className = "alert alert-" + color;
+        alertDiv.role = "alert";
+        alertDiv.innerHTML = message;
+
+        // Append the alert to the body
+        document.body.appendChild(alertDiv);
+
+        // Automatically hide the alert after 3 seconds (adjust as needed)
+        setTimeout(function() {
+            alertDiv.style.display = "none";
+        }, 3000);
+    }
     // Function to get the CSRF cookie value
     function getCookie(name) {
         var cookieValue = null;
@@ -49,12 +64,28 @@ $(document).ready(function() {
             url: "/delete_task/" + taskId + "/",
             headers: { "X-CSRFToken": getCookie("csrftoken") },
             success: function(data) {
-                console.log(data.html);
-    
+                $("#container-to-update").html(data.html);
+                $("#preview-submit-tasks").trigger('reset');
+                $("#preview-submit-tasks").hide(); // Add this line to hide the form after submission    
                 // Use native JavaScript to update the container
                 var containerToUpdate = document.getElementById("container-to-update");
                 if (containerToUpdate) {
                     containerToUpdate.innerHTML = data.html;
+    
+                    // Display a custom-styled success message with the title
+                    var successMessage = "Task deleted successfully: " + data.title;
+                    var alertDiv = document.createElement("div");
+                    alertDiv.className = "alert alert-danger";
+                    alertDiv.role = "alert";
+                    alertDiv.innerHTML = successMessage;
+    
+                    // Prepend the alert to the container
+                    containerToUpdate.prepend(alertDiv);
+    
+                    // Automatically hide the alert after 3 seconds (adjust as needed)
+                    setTimeout(function() {
+                        alertDiv.style.display = "none";
+                    }, 3000);
                 } else {
                     console.error("Container not found");
                 }
@@ -64,7 +95,68 @@ $(document).ready(function() {
             }
         });
     });
+
+
+    // Add a click event listener for the "Edit" button
+    $(document).on("click", ".edit-task", function() {
+        // Get the task ID from the data attribute
+        var taskId = $(this).data("task-id");
+
+        // Make an AJAX request to get the task details
+        $.ajax({
+            type: "POST",
+            url: "/edit_task/" + taskId + "/",  // Update the URL based on your URL configuration
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
+            success: function(data) {
+                if (data.html) {
+                    // Update the task list container with the new HTML
+                    $("#container-to-update").html(data.html);
+                    window.location.href = data.home_url;  // Update with your actual URL
+                } else {
+                    console.error("Updated task list HTML not found in the response");
+                }
+                $("#preview-submit-tasks").trigger('reset');
+                $("#preview-submit-tasks").hide(); // Add this line to hide the form after submission    
+                var containerToUpdate = document.getElementById("container-to-update");
+                if (containerToUpdate) {
+                    containerToUpdate.innerHTML = data.html;
     
+                    // Display a custom-styled success message with the title
+                    var successMessage = "Task updated successfully: " + data.title;
+                    var alertDiv = document.createElement("div");
+                    alertDiv.className = "alert alert-warning";
+                    alertDiv.role = "alert";
+                    alertDiv.innerHTML = successMessage;
+    
+                    // Prepend the alert to the container
+                    containerToUpdate.prepend(alertDiv);
+    
+                    // Automatically hide the alert after 3 seconds (adjust as needed)
+                    setTimeout(function() {
+                        alertDiv.style.display = "none";
+                    }, 3000);
+                } else {
+                    console.error("Container not found");
+                }
+            },
+            error: function(error) {
+                console.log(error);
+                var errorMessage = "An error occurred while editing the task.";
+                var alertDiv = document.createElement("div");
+                alertDiv.className = "alert alert-danger";
+                alertDiv.role = "alert";
+                alertDiv.innerHTML = errorMessage;
+            
+                // Prepend the alert to the container
+                containerToUpdate.prepend(alertDiv);
+            
+                // Automatically hide the alert after 3 seconds (adjust as needed)
+                setTimeout(function() {
+                    alertDiv.style.display = "none";
+                }, 3000);
+            }
+        });
+    });
 });
 
 
