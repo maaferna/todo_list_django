@@ -1,27 +1,18 @@
 $(document).ready(function() {
-    // Add this function to display the pop-up message
     function showPopupMessage(message, alertClass) {
-        var alertDiv = document.createElement("div");
-        alertDiv.className = "alert " + alertClass;
-        alertDiv.role = "alert";
-        alertDiv.innerHTML = message;
-
-        // Prepend the alert to the container
-        containerToUpdate.prepend(alertDiv);
-
-        // Automatically hide the alert after 3 seconds (adjust as needed)
+        var alertDiv = $('<div class="alert ' + alertClass + '" role="alert">' + message + '</div>');
+        $("#container-to-update").prepend(alertDiv);
         setTimeout(function() {
-            alertDiv.style.display = "none";
+            alertDiv.slideUp();
         }, 3000);
     }
-    // Function to get the CSRF cookie value
+
     function getCookie(name) {
         var cookieValue = null;
         if (document.cookie && document.cookie !== '') {
             var cookies = document.cookie.split(';');
             for (var i = 0; i < cookies.length; i++) {
                 var cookie = jQuery.trim(cookies[i]);
-                // Check if this cookie string begins with the name we want
                 if (cookie.substring(0, name.length + 1) === (name + '=')) {
                     cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                     break;
@@ -31,109 +22,73 @@ $(document).ready(function() {
         return cookieValue;
     }
 
+    function handleSuccess(data, messageType, alertClass) {
+        $("#container-to-update").html(data.html);
+        $("#preview-submit-tasks").trigger('reset');
+        $("#preview-submit-tasks").hide();
+
+        var successMessage = "Task " + messageType + " successfully: " + data.title;
+        showPopupMessage(successMessage, alertClass);
+    }
+
+    function handleError(error) {
+        console.log(error);
+        showPopupMessage("An error occurred.", "alert-danger");
+    }
+
     $("#add-task-btn").click(function() {
         $.ajax({
             type: "POST",
-            url: $(this).data("url"),  // Access the URL from the data attribute
+            url: $(this).data("url"),
             data: $("#add-task-form").serialize(),
-            headers: { "X-CSRFToken": getCookie("csrftoken") },  // Include the CSRF token in the headers
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
             success: function(data) {
-                $("#container-to-update").html(data.html);
-                $("#preview-submit-tasks").trigger('reset');
-                $("#preview-submit-tasks").hide(); // Add this line to hide the form after submission
-                // Display the success message
-                var alertDiv = $('<div class="alert alert-success" role="alert">' + data.message + '</div>');
-                $("#container-to-update").prepend(alertDiv);
-
-                // Automatically hide the alert after 3 seconds (adjust as needed)
-                setTimeout(function() {
-                    alertDiv.slideUp();
-                }, 10000);
-                },
+                handleSuccess(data, "added", "alert-success");
+            },
             error: function(error) {
-                console.log(error);
+                handleError(error);
             }
         });
     });
 
     $(document).on("click", ".delete-task", function() {
         var taskId = $(this).data("task-id");
-    
+
         $.ajax({
             type: "POST",
             url: "/delete_task/" + taskId + "/",
             headers: { "X-CSRFToken": getCookie("csrftoken") },
             success: function(data) {
-                $("#container-to-update").html(data.html);
-                $("#preview-submit-tasks").trigger('reset');
-                $("#preview-submit-tasks").hide(); // Add this line to hide the form after submission    
-                // Use native JavaScript to update the container
-                var containerToUpdate = document.getElementById("container-to-update");
-                if (containerToUpdate) {
-                    containerToUpdate.innerHTML = data.html;
-    
-                    // Display a custom-styled success message with the title
-                    var successMessage = "Task deleted successfully: " + data.title;
-                    var alertDiv = document.createElement("div");
-                    alertDiv.className = "alert alert-danger";
-                    alertDiv.role = "alert";
-                    alertDiv.innerHTML = successMessage;
-    
-                    // Prepend the alert to the container
-                    containerToUpdate.prepend(alertDiv);
-    
-                    // Automatically hide the alert after 3 seconds (adjust as needed)
-                    setTimeout(function() {
-                        alertDiv.style.display = "none";
-                    }, 3000);
-                } else {
-                    console.error("Container not found");
-                }
+                handleSuccess(data, "deleted", "alert-danger");
             },
             error: function(error) {
-                console.log(error);
+                handleError(error);
             }
         });
     });
 
-
-    // Add a click event listener for the "Edit" button
     $(document).on("click", ".edit-task", function() {
         var taskId = $(this).data("task-id");
-    
+
         $.ajax({
             type: "POST",
-            url: "/edit_task/" + taskId + "/",  
+            url: "/edit_task/" + taskId + "/",
             headers: { "X-CSRFToken": getCookie("csrftoken") },
             success: function(data) {
                 if (data.html) {
                     $("#container-to-update").html(data.html);
                     window.location.href = data.home_url;
+                    handleSuccess(data, "updated", "alert-warning");
                 } else {
                     console.error("Updated task list HTML not found in the response");
                 }
-                $("#preview-submit-tasks").trigger('reset');
-                $("#preview-submit-tasks").hide();
-                var containerToUpdate = document.getElementById("container-to-update");
-                if (containerToUpdate) {
-                    containerToUpdate.innerHTML = data.html;
-    
-                    // Display a custom-styled success message with the title
-                    var successMessage = "Task updated successfully: " + data.title;
-                    showPopupMessage(successMessage, "alert-warning");
-                } else {
-                    console.error("Container not found");
-                }
             },
             error: function(error) {
-                console.log(error);
-                var errorMessage = "An error occurred while editing the task.";
-                showPopupMessage(errorMessage, "alert-warning");
+                handleError(error);
             }
         });
     });
 });
-
 
 var tasksData = [];
 var taskItems = document.querySelectorAll('.task-item');
@@ -145,14 +100,11 @@ taskItems.forEach(function(taskItem) {
         description: taskItem.querySelector('p:nth-child(2)').innerText,
         priority: taskItem.querySelector('p:nth-child(3)').innerText,
         effort: taskItem.querySelector('p:nth-child(4)').innerText,
-        // Add more properties as needed
     });
 });
 
-// Send the JSON object as a response
 var jsonData = JSON.stringify(tasksData);
-console.log(jsonData);  // You can use this data as needed, for example, sending it via AJAX
-
+console.log(jsonData);
 
 function truncateText(selector, maxLength) {
     var elements = document.querySelectorAll(selector);
