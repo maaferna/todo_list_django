@@ -1,13 +1,13 @@
 $(document).ready(function() {
-    // Function to show a popup message with a specific color
-    function showPopupMessage(message, color) {
+    // Add this function to display the pop-up message
+    function showPopupMessage(message, alertClass) {
         var alertDiv = document.createElement("div");
-        alertDiv.className = "alert alert-" + color;
+        alertDiv.className = "alert " + alertClass;
         alertDiv.role = "alert";
         alertDiv.innerHTML = message;
 
-        // Append the alert to the body
-        document.body.appendChild(alertDiv);
+        // Prepend the alert to the container
+        containerToUpdate.prepend(alertDiv);
 
         // Automatically hide the alert after 3 seconds (adjust as needed)
         setTimeout(function() {
@@ -48,7 +48,7 @@ $(document).ready(function() {
                 // Automatically hide the alert after 3 seconds (adjust as needed)
                 setTimeout(function() {
                     alertDiv.slideUp();
-                }, 3000);
+                }, 10000);
                 },
             error: function(error) {
                 console.log(error);
@@ -99,42 +99,28 @@ $(document).ready(function() {
 
     // Add a click event listener for the "Edit" button
     $(document).on("click", ".edit-task", function() {
-        // Get the task ID from the data attribute
         var taskId = $(this).data("task-id");
-
-        // Make an AJAX request to get the task details
+    
         $.ajax({
             type: "POST",
-            url: "/edit_task/" + taskId + "/",  // Update the URL based on your URL configuration
+            url: "/edit_task/" + taskId + "/",  
             headers: { "X-CSRFToken": getCookie("csrftoken") },
             success: function(data) {
                 if (data.html) {
-                    // Update the task list container with the new HTML
                     $("#container-to-update").html(data.html);
-                    window.location.href = data.home_url;  // Update with your actual URL
+                    window.location.href = data.home_url;
                 } else {
                     console.error("Updated task list HTML not found in the response");
                 }
                 $("#preview-submit-tasks").trigger('reset');
-                $("#preview-submit-tasks").hide(); // Add this line to hide the form after submission    
+                $("#preview-submit-tasks").hide();
                 var containerToUpdate = document.getElementById("container-to-update");
                 if (containerToUpdate) {
                     containerToUpdate.innerHTML = data.html;
     
                     // Display a custom-styled success message with the title
                     var successMessage = "Task updated successfully: " + data.title;
-                    var alertDiv = document.createElement("div");
-                    alertDiv.className = "alert alert-warning";
-                    alertDiv.role = "alert";
-                    alertDiv.innerHTML = successMessage;
-    
-                    // Prepend the alert to the container
-                    containerToUpdate.prepend(alertDiv);
-    
-                    // Automatically hide the alert after 3 seconds (adjust as needed)
-                    setTimeout(function() {
-                        alertDiv.style.display = "none";
-                    }, 3000);
+                    showPopupMessage(successMessage, "alert-warning");
                 } else {
                     console.error("Container not found");
                 }
@@ -142,18 +128,7 @@ $(document).ready(function() {
             error: function(error) {
                 console.log(error);
                 var errorMessage = "An error occurred while editing the task.";
-                var alertDiv = document.createElement("div");
-                alertDiv.className = "alert alert-danger";
-                alertDiv.role = "alert";
-                alertDiv.innerHTML = errorMessage;
-            
-                // Prepend the alert to the container
-                containerToUpdate.prepend(alertDiv);
-            
-                // Automatically hide the alert after 3 seconds (adjust as needed)
-                setTimeout(function() {
-                    alertDiv.style.display = "none";
-                }, 3000);
+                showPopupMessage(errorMessage, "alert-warning");
             }
         });
     });
