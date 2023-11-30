@@ -18,7 +18,8 @@ def home(request):
             tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
             html = render_to_string('partials/_task_list.html', {'tasks': tasks})
             message = "Task successfully saved!"  # Add your desired success message
-            return JsonResponse({'html': html, 'message': message})
+            title = task.title
+            return JsonResponse({'html': html, 'message': message, 'title': title})
     else:
         form = TaskForm()
     return render(request, 'todo/home.html', {'form': form, 'tasks': tasks})
