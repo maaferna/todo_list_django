@@ -8,20 +8,29 @@ from .forms import TaskForm
 
 def home(request):
     tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
-    form = TaskForm(request.POST or None, initial={'tasks': tasks})
+
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             task = form.save(commit=False)
-            task.user = request.user  # Assign the current user to the task
+            task.user = request.user
             task.save()
+
             tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
             html = render_to_string('partials/_task_list.html', {'tasks': tasks})
-            message = "Task successfully saved!"  # Add your desired success message
+
+            # Modify the home_url to redirect to the homepage after adding a new task
+            home_url = reverse('home')
+            
+            message = "Task successfully saved!"
             title = task.title
-            return JsonResponse({'html': html, 'message': message, 'title': title})
-    else:
-        form = TaskForm()
+            
+            return JsonResponse({'html': html, 'home_url': home_url, 'message': message, 'title': title})
+        else:
+            error_message = "Please select values for both priority and effort."
+            return JsonResponse({'error_message': error_message})
+
+    form = TaskForm()
     return render(request, 'todo/home.html', {'form': form, 'tasks': tasks})
 
 def delete_task(request, task_id):
@@ -30,7 +39,9 @@ def delete_task(request, task_id):
     task.delete()
     tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
     html = render_to_string('partials/_task_list.html', {'tasks': tasks})
-    return JsonResponse({'html': html, 'title': title})
+    home_url = reverse('home')  # Assuming 'home' is the name of your home URL pattern
+
+    return JsonResponse({'html': html, 'title': title, 'home_url': home_url})
 
 
 def edit_task(request, task_id):

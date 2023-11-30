@@ -4,7 +4,7 @@ $(document).ready(function() {
         $("#container-to-update").prepend(alertDiv);
         setTimeout(function() {
             alertDiv.slideUp();
-        }, 3000);
+        }, 10000);
     }
 
     function getCookie(name) {
@@ -39,17 +39,29 @@ $(document).ready(function() {
     $("#add-task-btn").click(function() {
         $.ajax({
             type: "POST",
-            url: $(this).data("url"),
+            url: $(this).data("url"),  // Access the URL from the data attribute
             data: $("#add-task-form").serialize(),
-            headers: { "X-CSRFToken": getCookie("csrftoken") },
+            headers: { "X-CSRFToken": getCookie("csrftoken") },  // Include the CSRF token in the headers
             success: function(data) {
-                handleSuccess(data, "added", "alert-success");
+                if (data.html) {
+                    // Update the task list container with the new HTML
+                    $("#container-to-update").html(data.html);
+                    window.location.href = data.home_url;  // Update with your actual URL
+                } else if (data.error_message) {
+                    // Display the error message
+                    showPopupMessage(data.error_message, "alert-danger");
+                } else {
+                    console.error("Invalid response from the server");
+                }
+                $("#preview-submit-tasks").trigger('reset');
+                $("#preview-submit-tasks").hide();
             },
             error: function(error) {
-                handleError(error);
+                console.log(error);
             }
         });
     });
+    
 
     $(document).on("click", ".delete-task", function() {
         var taskId = $(this).data("task-id");
@@ -77,8 +89,8 @@ $(document).ready(function() {
             success: function(data) {
                 if (data.html) {
                     $("#container-to-update").html(data.html);
-                    window.location.href = data.home_url;
                     handleSuccess(data, "updated", "alert-warning");
+                    window.location.href = data.home_url;
                 } else {
                     console.error("Updated task list HTML not found in the response");
                 }

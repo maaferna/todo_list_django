@@ -13,4 +13,19 @@ class TaskForm(forms.ModelForm):
             'effort': forms.Select(attrs={'class': 'custom-select'}),
         }
 
+    def __init__(self, *args, **kwargs):
+            super(TaskForm, self).__init__(*args, **kwargs)
+            # Make the priority and effort fields optional with default values
+            self.fields['priority'].required = True
+            self.fields['effort'].required = True
 
+    def clean(self):
+        cleaned_data = super(TaskForm, self).clean()
+        priority = cleaned_data.get('priority')
+        effort = cleaned_data.get('effort')
+
+        # Check if either priority or effort is missing
+        if priority is None or effort is None:
+            raise forms.ValidationError("Please select values for both priority and effort.")
+
+        return cleaned_data
