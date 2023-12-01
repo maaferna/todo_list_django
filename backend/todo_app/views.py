@@ -1,12 +1,17 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import authenticate, login, logout
+
 
 from .models import Task
-from .forms import TaskForm
+from .forms import *
 
+@login_required()  # Redirect to your custom login URL
 def home(request):
     tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
 
@@ -31,6 +36,7 @@ def home(request):
             return JsonResponse({'html': html, 'home_url': home_url, 'title': title})
         else:
             error_message = "Please select values for both priority and effort."
+            messages.error(request,error_message)  # Add success message to Django messages
             return JsonResponse({'error_message': error_message})
 
     form = TaskForm()
@@ -70,3 +76,48 @@ def edit_task(request, task_id):
             else:
                 # If the request is not an AJAX request, redirect to the home URL
                 return redirect(home_url)
+
+
+def view_login(request):
+  if request.method == "POST":
+    form = AuthenticationForm(request, data=request.POST)
+    if form.is_valid():
+      username = form.cleaned_data.get('username')
+      password = form.cleaned_data.get('password')
+      user = authenticate(username=username,
+      password=password)
+      if user is not None:
+        login(request, user)
+        messages.info(request, f"Iniciaste sesión como: {username}.")
+        return HttpResponseRedirect('/')
+      else:
+        messages.error(request,"Invalido username o password.")
+    else:
+      messages.error(request,"Invalido username o password.")
+  form = AuthenticationForm()
+  return render(request=request, template_name="registration/login.html",context={"login_form":form})
+
+
+def view_register(request):
+  if request.method == "POST":
+    form = RegistroUsuarioForm(request.POST)
+    if form.is_valid():
+      user = form.save()
+      #user.groups.add(Group.objects.get(name="visualizar_catalogo"))
+      login(request, user)
+      messages.success(request, "Registrado Satisfactoriamente." )
+      return HttpResponseRedirect('/')
+    messages.error(request, "Registro invalido. Algunos datos ingresados no son correctos")
+  form = RegistroUsuarioForm()
+  return render (request=request, template_name="registration/register.html", context={"register_form":form})
+
+
+@login_required
+def view_logout(request):
+  logout(request)
+  messages.info(request, "Se ha cerrado la sesión satisfactoriamente.")
+  return redirect('home')
+
+
+def custom_permission_denied(request, exception):
+    return render(request, 'registration/custom_permission_denied.html', status=403)

@@ -1,0 +1,34 @@
+{% extends "base.html" %} 
+{% block content %} 
+{% load crispy_forms_tags %}
+<br><br>
+<!--Registro-->
+<div class="container border p-3 mb-3 bg-light text-dark">
+    <h1>Registro</h1>
+</div>
+<div class="container border p-3 mb-3 bg-light text-dark">
+    <form method="POST">
+        {% csrf_token %} 
+        <div class="form-group row mt-8">
+            <div class="col-md-6 mb-0">
+                {{ register_form.username|as_crispy_field }}
+            </div>
+            <div class="col-md-6 mb-0">
+                {{ register_form.email|as_crispy_field }}
+            </div>
+        </div>
+        <div class="form-group row mt-8">
+            {{ register_form.password1|as_crispy_field }}
+        </div>
+        <div class="form-group row mt-8">
+            {{ register_form.password2|as_crispy_field }}
+        </div>
+        <button class="btn btn-primary" type="submit">Register</button>
+    </form>
+    <p class="text-center">
+        Si tienes actualmente una cuenta, inicie su sesión en
+        <a href="{% url 'login' %}">login</a>.
+    </p>
+</div>
+
+{% endblock %}

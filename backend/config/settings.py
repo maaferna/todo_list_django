@@ -152,3 +152,5 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+LOGIN_URL = 'login'
