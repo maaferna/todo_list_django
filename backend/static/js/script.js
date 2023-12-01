@@ -4,7 +4,7 @@ $(document).ready(function() {
         $("#container-to-update").prepend(alertDiv);
         setTimeout(function() {
             alertDiv.slideUp();
-        }, 10000);
+        }, 3000);
     }
 
     function getCookie(name) {
@@ -29,6 +29,11 @@ $(document).ready(function() {
 
         var successMessage = "Task " + messageType + " successfully: " + data.title;
         showPopupMessage(successMessage, alertClass);
+        
+        // Check if the page was reloaded
+        if (data.home_url) {
+            window.location.href = data.home_url;  // Update with your actual URL
+        }
     }
 
     function handleError(error) {
@@ -39,29 +44,24 @@ $(document).ready(function() {
     $("#add-task-btn").click(function() {
         $.ajax({
             type: "POST",
-            url: $(this).data("url"),  // Access the URL from the data attribute
+            url: $(this).data("url"),
             data: $("#add-task-form").serialize(),
-            headers: { "X-CSRFToken": getCookie("csrftoken") },  // Include the CSRF token in the headers
+            headers: { "X-CSRFToken": getCookie("csrftoken") },
             success: function(data) {
                 if (data.html) {
-                    // Update the task list container with the new HTML
-                    $("#container-to-update").html(data.html);
-                    window.location.href = data.home_url;  // Update with your actual URL
+                    handleSuccess(data, "created", "alert-success");
                 } else if (data.error_message) {
-                    // Display the error message
                     showPopupMessage(data.error_message, "alert-danger");
                 } else {
                     console.error("Invalid response from the server");
                 }
-                $("#preview-submit-tasks").trigger('reset');
-                $("#preview-submit-tasks").hide();
             },
             error: function(error) {
                 console.log(error);
+                handleError(error);
             }
         });
     });
-    
 
     $(document).on("click", ".delete-task", function() {
         var taskId = $(this).data("task-id");
@@ -74,6 +74,7 @@ $(document).ready(function() {
                 handleSuccess(data, "deleted", "alert-danger");
             },
             error: function(error) {
+                console.log(error);
                 handleError(error);
             }
         });
@@ -88,14 +89,15 @@ $(document).ready(function() {
             headers: { "X-CSRFToken": getCookie("csrftoken") },
             success: function(data) {
                 if (data.html) {
-                    $("#container-to-update").html(data.html);
                     handleSuccess(data, "updated", "alert-warning");
-                    window.location.href = data.home_url;
+                } else if (data.error_message) {
+                    showPopupMessage(data.error_message, "alert-danger");
                 } else {
-                    console.error("Updated task list HTML not found in the response");
+                    console.error("Invalid response from the server");
                 }
             },
             error: function(error) {
+                console.log(error);
                 handleError(error);
             }
         });

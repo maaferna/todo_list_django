@@ -2,6 +2,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.contrib import messages
 
 from .models import Task
 from .forms import TaskForm
@@ -21,11 +22,13 @@ def home(request):
 
             # Modify the home_url to redirect to the homepage after adding a new task
             home_url = reverse('home')
-            
-            message = "Task successfully saved!"
+
             title = task.title
+            message = "Task successfully saved!: " + title 
             
-            return JsonResponse({'html': html, 'home_url': home_url, 'message': message, 'title': title})
+            messages.success(request, message)  # Add success message to Django messages
+
+            return JsonResponse({'html': html, 'home_url': home_url, 'title': title})
         else:
             error_message = "Please select values for both priority and effort."
             return JsonResponse({'error_message': error_message})
@@ -40,7 +43,8 @@ def delete_task(request, task_id):
     tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
     html = render_to_string('partials/_task_list.html', {'tasks': tasks})
     home_url = reverse('home')  # Assuming 'home' is the name of your home URL pattern
-
+    message = "Task successfully deleted!: " + title 
+    messages.warning(request, message)  # Add success message to Django messages
     return JsonResponse({'html': html, 'title': title, 'home_url': home_url})
 
 
@@ -56,7 +60,10 @@ def edit_task(request, task_id):
             tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
             html = render_to_string('partials/_task_list.html', {'tasks': tasks})
             home_url = reverse('home')  # Assuming 'home' is the name of your home URL pattern
-            print("Console log the home: ", home_url)
+            title = task.title
+            message = "Task successfully updated!: " + title 
+            
+            messages.info(request, message)  # Add success message to Django messages
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 # If the request is an AJAX request, return a JSON response
                 return JsonResponse({'html': html, 'title': title, 'home_url': home_url})
