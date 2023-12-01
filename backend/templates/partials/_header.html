@@ -1,0 +1,56 @@
+<header class="mb-0">
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="col-12 col-md-8">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="nav navbar-nav mr-auto">
+                        <li class="nav-item"><a class="nav-link" href="/">Simulador</li>
+                        <li class="nav-item"><a class="nav-link" href="/"><i class="fa fa-home" aria-hidden="true"></i>Inicio<span class="sr-only">(current)</span></a></a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" ariaexpanded="false"><i class="fa fa-plus" aria-hidden="true"></i>Agregar</a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
+                                <li><a class="dropdown-item"  id="pdf_file" href="">Agregar Laboratorio</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item"  id="pdf_file" href="">Agregar Director Ejecutivo</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item"  id="pdf_file" href="">Agregar Producto</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" ariaexpanded="false"><i class="fa fa-list" aria-hidden="true"></i>Mostrar</a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
+                                <li><a class="dropdown-item"  id="pdf_file" href="">Mostrar listado de Laboratorios</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item"  id="pdf_file" href="">Mostrar Directores Ejecutivos</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item"  id="pdf_file" href="">Mostrar Productos</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href=""><span class="fa fa-address-book"></span>Contacto</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">Salir</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Hola, {{user.username}}</a>
+                    </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'register' %}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+       </div>
+    </nav>
+</header>
