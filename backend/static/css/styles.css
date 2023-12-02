@@ -22,3 +22,47 @@
     height: 4rem; /* set a fixed max-height for the task.description element */
     overflow-y: auto; /* enable scrolling when the content exceeds the max-height */
 }
+
+.task-title {
+    cursor: pointer;
+    border: 1px solid #ddd; /* Add border to task title */
+    padding: 8px;
+    margin-bottom: 5px;
+}
+
+.task-title:hover {
+    background-color: #f5f5f5; /* Change background color on hover */
+}
+
+.task-details {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-top: 5px;
+    border-radius: 5px; /* Add border-radius to task details */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box-shadow for a subtle effect */
+}
+
+.description-text {
+    font-weight: bold;
+    color: #333; /* Change text color for better readability */
+}
+
+.my-8 {
+    margin-top: 32px; /* adjust this value as needed */
+    margin-bottom: 32px; /* adjust this value as needed */
+    border-top: 15px solid; 
+    opacity: .15;
+   }
+
+
+
+ .vertical-separator {
+    height: 100%;
+    width: 15px;
+    background-color: #dee2e6;
+    left: 50%;
+    top: 200px;
+    bottom: 0;
+    margin-left: -1px;
+ }

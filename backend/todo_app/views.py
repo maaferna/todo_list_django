@@ -125,11 +125,11 @@ def custom_permission_denied(request, exception):
 
 @login_required()  # Redirect to your custom login URL
 def dashboard(request):
-    high_priority_tasks = Task.objects.filter(user=request.user, priority='High')
-    medium_priority_tasks = Task.objects.filter(user=request.user, priority='Medium')
-    low_priority_tasks = Task.objects.filter(user=request.user, priority='Low')
+    high_priority_tasks = Task.objects.filter(user=request.user, priority='high')
+    medium_priority_tasks = Task.objects.filter(user=request.user, priority='medium')
+    low_priority_tasks = Task.objects.filter(user=request.user, priority='low')
     important_priority_tasks = Task.objects.filter(user=request.user, priority='important')
-    print(important_priority_tasks)
+    print(high_priority_tasks)
     return render(
         request,
         'todo/dashboard.html',
