@@ -121,3 +121,37 @@ def view_logout(request):
 
 def custom_permission_denied(request, exception):
     return render(request, 'registration/custom_permission_denied.html', status=403)
+
+
+@login_required()  # Redirect to your custom login URL
+def dashboard(request):
+    high_priority_tasks = Task.objects.filter(user=request.user, priority='High')
+    medium_priority_tasks = Task.objects.filter(user=request.user, priority='Medium')
+    low_priority_tasks = Task.objects.filter(user=request.user, priority='Low')
+    important_priority_tasks = Task.objects.filter(user=request.user, priority='important')
+    print(important_priority_tasks)
+    return render(
+        request,
+        'todo/dashboard.html',
+        {
+            'important_priority_tasks': important_priority_tasks,
+            'high_priority_tasks': high_priority_tasks,
+            'medium_priority_tasks': medium_priority_tasks,
+            'low_priority_tasks': low_priority_tasks,
+        }
+    )
+
+
+def get_task_details(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+
+    # Customize the data you want to include in the JSON response
+    task_details = {
+        'title': task.title,
+        'description': task.description,
+        'effort': task.effort,
+        'created_at': task.created_at,
+        'modified_at': task.modified_at
+    }
+
+    return JsonResponse({'details': task_details})
