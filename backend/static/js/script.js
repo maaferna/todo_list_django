@@ -102,6 +102,35 @@ $(document).ready(function() {
             }
         });
     });
+    $(document).on('click', '.task-title', function(event) {
+        // Stop the event from propagating to other elements
+        event.stopPropagation();
+    
+        // Prevent the default behavior of the anchor tag
+        event.preventDefault();
+        
+        var taskId = $(this).data('task-id');
+        var detailsContainer = $(this).siblings('.task-details');
+        
+        // Fetch additional details using AJAX
+        $.ajax({
+            url: '/get_task_details/' + taskId + '/',
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Update the details container with fetched details
+                detailsContainer.html('<p>Creation Date: ' + data.details.created_at + '</p>' +
+                                        '<p>Last Modified Date: ' + data.details.modified_at + '</p>' +
+                                        '<p>Description: ' + data.details.description + '</p>' +
+                                        '<p>Effort: ' + data.details.effort + '</p>');
+            },
+            error: function(error) {
+                console.log('Error fetching task details:', error);
+            }
+            });
+        // Toggle visibility of the details container
+        detailsContainer.slideToggle();
+    });
 });
 
 var tasksData = [];
@@ -130,3 +159,15 @@ function truncateText(selector, maxLength) {
 }
 
 truncateText('.description', 50);
+
+
+document.querySelectorAll('.task-title').forEach(function(title) {
+    title.addEventListener('click', function(event) {
+        // Stop the event from propagating to other elements
+        event.stopPropagation();
+
+        // Toggle the display of task details
+        var details = title.nextElementSibling;
+        details.style.display = details.style.display === 'none' ? 'block' : 'none';
+    });
+});
