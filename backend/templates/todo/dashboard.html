@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="container mt-5">
+  <div class="container mt-5 pb-3">
     <h1 class="mb-4">Task Dashboard</h1>
 
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-5">
         <div class="card mb-4">
           <div class="card-header bg-danger text-white">
             <h2 class="mb-0">Important Priority</h2>
@@ -13,68 +13,141 @@
           <ul class="list-group list-group-flush">
             {% for task in important_priority_tasks %}
             <li class="list-group-item">
-                <div class="task-title" data-task-id="{{ task.id }}">{{ task.title }}</div>
-                <div class="task-details" style="display: none; border-radius: 3px;">
-                    <div class="container mt-4">
-                        <div class="row">
-                            <div class="col-6">
-                                <p>Last Modified Date: {{ task.modified_at|date }}</p>
-                            </div>
-                            <div class="col-6">
-                                <p>Creation Date: {{ task.created_at|date }}</p>
-                            </div>
-                        </div>
-                      <p  class="description description-text">Description: {{ task.description }}</p>
-                      <blockquote>Effort: {{ task.effort }}</blockquote>
+              <div class="task-title" data-task-id="{{ task.id }}">{{ task.title }}</div>
+              <div class="task-details" style="display: none;">
+                <div class="container mt-4">
+                  <div class="row">
+                    <div class="col-6">
+                      <p>Last Modified Date: {{ task.modified_at|date }}</p>
                     </div>
-                </div>    
-              </li>
+                    <div class="col-1">
+                      <p>/</p>
+                    </div>
+                    <div class="col">
+                      <p>Creation Date: {{ task.created_at|date }}</p>
+                    </div>
+                  </div>
+                  <p class="description description-text">Description: {{ task.description }}</p>
+                  <blockquote>Effort: {{ task.effort }}</blockquote>
+                </div>
+              </div>
+            </li>
             {% endfor %}
-          </ul>
+          </ul>        
         </div>
       </div>
+      <div class="col-1">
 
-      <div class="col-md-6">
+      </div>
+      <div class="col-1">
+        <div class="vertical-separator"></div> <!-- Vertical line -->
+      </div>
+      <div class="col-5">
         <div class="card mb-4">
           <div class="card-header bg-warning">
             <h2 class="mb-0">High Priority</h2>
           </div>
           <ul class="list-group list-group-flush">
             {% for task in high_priority_tasks %}
-              <li class="list-group-item">{{ task.title }}</li>
+            <li class="list-group-item">
+              <div class="task-title" data-task-id="{{ task.id }}">{{ task.title }}</div>
+              <div class="task-details" style="display: none;">
+                <div class="container mt-4">
+                  <div class="row">
+                    <div class="col-6">
+                      <p>Last Modified Date: {{ task.modified_at|date }}</p>
+                    </div>
+                    <div class="col-1">
+                      <p>/</p>
+                    </div>
+                    <div class="col">
+                      <p>Creation Date: {{ task.created_at|date }}</p>
+                    </div>
+                  </div>
+                  <p class="description description-text">Description: {{ task.description }}</p>
+                  <blockquote>Effort: {{ task.effort }}</blockquote>
+                </div>
+              </div>
+            </li>
             {% endfor %}
-          </ul>
+          </ul>        
         </div>
       </div>
     </div>
+    
+    <hr class="my-8">
     <div class="row">
-        <div class="col-md-6">
-          <div class="card mb-4">
+        <div class="col-5">
+          <div class="card mt-4">
             <div class="card-header bg-primary text-white">
               <h2 class="mb-0">Medium Priority</h2>
             </div>
             <ul class="list-group list-group-flush">
               {% for task in medium_priority_tasks %}
-                <li class="list-group-item">{{ task.title }}</li>
+              <li class="list-group-item">
+                  <div class="task-title" data-task-id="{{ task.id }}">{{ task.title }}</div>
+                  <div class="task-details" style="display: none;">
+                      <div class="container mt-4">
+                          <div class="row">
+                              <div class="col-6">
+                                  <p>Last Modified Date: {{ task.modified_at|date }}</p>
+                              </div>
+                              <div class="col-1">
+                                  <p>/</p>
+                              </div>
+                              <div class="col">
+                                  <p>Creation Date: {{ task.created_at|date }}</p>
+                              </div>
+                          </div>
+                          <p class="description description-text">Description: {{ task.description }}</p>
+                          <blockquote>Effort: {{ task.effort }}</blockquote>
+                      </div>
+                  </div>
+              </li>
               {% endfor %}
-            </ul>
+            </ul>        
           </div>
         </div>
-  
-        <div class="col-md-6">
-          <div class="card mb-4">
+        <div class="col-1">
+
+        </div>
+        <div class="col-1">
+          <div class="vertical-separator"></div> <!-- Vertical line -->
+        </div>
+        <div class="col-5"> <!-- Add border between columns -->
+          <div class="card mt-4">
             <div class="card-header bg-success">
               <h2 class="mb-0">Low Priority</h2>
             </div>
             <ul class="list-group list-group-flush">
               {% for task in low_priority_tasks %}
-                <li class="list-group-item">{{ task.title }}</li>
+              <li class="list-group-item">
+                  <div class="task-title" data-task-id="{{ task.id }}">{{ task.title }}</div>
+                  <div class="task-details" style="display: none;">
+                      <div class="container mt-4">
+                          <div class="row">
+                              <div class="col-6">
+                                  <p>Last Modified Date: {{ task.modified_at|date }}</p>
+                              </div>
+                              <div class="col-1">
+                                  <p>/</p>
+                              </div>
+                              <div class="col">
+                                  <p>Creation Date: {{ task.created_at|date }}</p>
+                              </div>
+                          </div>
+                          <p class="description description-text">Description: {{ task.description }}</p>
+                          <blockquote>Effort: {{ task.effort }}</blockquote>
+                      </div>
+                  </div>
+              </li>
               {% endfor %}
-            </ul>
+            </ul>        
           </div>
         </div>
       </div>
   </div>
 {% endblock %}
+
 
 
