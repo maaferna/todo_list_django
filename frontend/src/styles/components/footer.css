@@ -87,3 +87,12 @@ footer .nav-link:hover {
     color: #ddd;
     text-decoration: none;
 }
+
+.icon-hover:hover {
+    color: white;
+  }
+  
+
+footer  .nav-link i {
+    margin-right: 0.5rem;
+   }

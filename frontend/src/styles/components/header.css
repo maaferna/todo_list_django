@@ -38,3 +38,22 @@
     background-color: #ddd;
     color: black;
 }
+
+/* In your custom CSS file */
+.navbar-nav .nav-link {
+    color: #044806; /* Change the link color */
+   }
+   
+.navbar-nav .nav-link:hover {
+    color: #041805; /* Change the link color on hover */
+    background-color: #ddd;
+    border-radius: 10px;
+   }
+
+.sticky-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #fff; /* Adjust as needed */
+    z-index: 1000; /* Adjust as needed */
+  }
