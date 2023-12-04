@@ -1,0 +1,89 @@
+footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+}
+
+footer .container {
+    background-color: #333;
+    color: white;
+}
+
+footer .row {
+    padding: 20px;
+}
+
+footer h5 {
+    color: #e0e0e0;
+}
+
+footer .btn {
+    margin: 5px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #ddd;
+    text-decoration: none;
+}
+
+footer .fa {
+    margin-right: 5px;
+}
+
+footer .fa-home {
+    margin-right: 5px;
+}
+
+footer .fa-envelope {
+    margin-right: 5px;
+}
+
+footer .fa-phone {
+    margin-right: 5px;
+}
+
+footer .fa-file {
+    margin-right: 5px;
+}
+
+footer .fa-linkedin-in {
+    margin-right: 5px;
+}
+
+footer .fa-github {
+    margin-right: 5px;
+}
+
+footer .fa-twitter {
+    margin-right: 5px;
+}
+
+footer .fa-address-book {
+    margin-right: 5px;
+}
+
+footer .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+footer .nav-link {
+    color: white;
+    text-decoration: none;
+}
+
+footer .nav-link:hover {
+    color: #ddd;
+    text-decoration: none;
+}

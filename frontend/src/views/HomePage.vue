@@ -1,9 +1,11 @@
 <template>
-    <div>
-      <Header />
-      <!-- Your main content goes here -->
-      <Footer />
-    </div>
+    <Header />
+    <main>
+      <div class="container">
+        <p>Some main section</p>
+      </div>
+    </main>
+    <Footer />
   </template>
   
   <script>
@@ -19,7 +21,7 @@
   };
   </script>
   
-  <style scoped>
-    /* Component-specific styles go here */
+  <style lang="css" scoped>
+  @import "@/styles/base.css";
   </style>
   
