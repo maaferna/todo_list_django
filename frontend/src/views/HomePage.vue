@@ -1,12 +1,13 @@
 <template>
-    <Header />
-    <main>
-      <div class="container">
-        <p>Some main section</p>
-      </div>
-    </main>
-    <Footer />
-  </template>
+  <Header />
+  <br>
+  <main>
+    <div class="container">
+      <p>Some main section</p>
+    </div>
+  </main>
+  <Footer />
+</template>
   
   <script>
   import Header from '../components/partials/HeaderSection.vue';
