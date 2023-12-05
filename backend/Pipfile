@@ -11,6 +11,9 @@ django-crispy-forms = "*"
 django-fontawesome-5 = "*"
 django-bootstrap5 = "*"
 crispy-bootstrap5 = "*"
+djangorestframework = "*"
+django-cors-headers = "*"
+djoser = "*"
 
 [dev-packages]
 

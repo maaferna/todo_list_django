@@ -8,4 +8,6 @@ urlpatterns = [
     path('login', view_login, name='login'),
     path('logout', view_logout, name="logout"),
     path('register', view_register, name="register"),
+    path('api/v1/', include('djoser.urls')),
+    path('api/v1/', include('djoser.urls.authtoken')),
 ]

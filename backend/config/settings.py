@@ -34,6 +34,10 @@ INSTALLED_APPS = [
     'django_bootstrap5',
     'crispy_forms',
     'crispy_bootstrap5',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    'djoser',
 
     # Modules
     'todo_app.apps.TodoAppConfig',
@@ -42,6 +46,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -154,3 +159,11 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_URL = 'login'
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+]
+
+# Optional: Allow cookies to be included in cross-origin requests
+CORS_ALLOW_CREDENTIALS = True
