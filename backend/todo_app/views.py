@@ -7,7 +7,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
+from .serializers import TaskSerializer
 from .models import Task
 from .forms import *
 
@@ -155,3 +158,10 @@ def get_task_details(request, task_id):
     }
 
     return JsonResponse({'details': task_details})
+
+
+class TasksList(APIView):
+   def get(self, request, format=None):
+      tasks = Task.objects.all()
+      serializer = TaskSerializer(tasks, many=True)
+      return Response(serializer.data)
