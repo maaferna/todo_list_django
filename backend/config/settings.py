@@ -158,7 +158,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-LOGIN_URL = 'login'
+LOGIN_URL = 'login-customize'
 
 
 CORS_ALLOWED_ORIGINS = [
@@ -167,3 +167,9 @@ CORS_ALLOWED_ORIGINS = [
 
 # Optional: Allow cookies to be included in cross-origin requests
 CORS_ALLOW_CREDENTIALS = True
+
+
+DJOSER = {
+    'LOGIN_VIEW': 'login-customize',  # Your custom login view
+    # ... other Djoser settings
+}
