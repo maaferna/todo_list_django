@@ -5,8 +5,8 @@ from todo_app.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('todo_app.urls')),
-    path('login', view_login, name='login'),
-    path('logout', view_logout, name="logout"),
+    path('login', view_login, name='login-customize'),
+    path('logout', view_logout, name="logout-customize"),
     path('register', view_register, name="register"),
     path('api/v1/', include('djoser.urls')),
     path('api/v1/', include('djoser.urls.authtoken')),

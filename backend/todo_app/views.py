@@ -4,6 +4,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 
@@ -14,7 +15,7 @@ from .serializers import TaskSerializer
 from .models import Task
 from .forms import *
 
-@login_required()  # Redirect to your custom login URL
+@login_required  # Redirect to your custom login URL
 def home(request):
     tasks = Task.objects.filter(user=request.user).order_by('-modified_at')
 
@@ -45,6 +46,7 @@ def home(request):
     form = TaskForm()
     return render(request, 'todo/home.html', {'form': form, 'tasks': tasks})
 
+@login_required()
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     title = task.title  # Get the title before deletion
@@ -56,7 +58,7 @@ def delete_task(request, task_id):
     messages.warning(request, message)  # Add success message to Django messages
     return JsonResponse({'html': html, 'title': title, 'home_url': home_url})
 
-
+@login_required()
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id)
     title = task.title  # Get the title before edition
@@ -80,25 +82,23 @@ def edit_task(request, task_id):
                 # If the request is not an AJAX request, redirect to the home URL
                 return redirect(home_url)
 
-
 def view_login(request):
-  if request.method == "POST":
-    form = AuthenticationForm(request, data=request.POST)
-    if form.is_valid():
-      username = form.cleaned_data.get('username')
-      password = form.cleaned_data.get('password')
-      user = authenticate(username=username,
-      password=password)
-      if user is not None:
-        login(request, user)
-        messages.info(request, f"Iniciaste sesión como: {username}.")
-        return HttpResponseRedirect('/')
-      else:
-        messages.error(request,"Invalido username o password.")
-    else:
-      messages.error(request,"Invalido username o password.")
-  form = AuthenticationForm()
-  return render(request=request, template_name="registration/login.html",context={"login_form":form})
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"Iniciaste sesión como: {username}.")
+                return redirect('home')  # Redirect to the homepage
+            else:
+                messages.error(request, "Invalido username o password.")
+        else:
+            messages.error(request, "Invalido username o password.")
+    form = AuthenticationForm()
+    return render(request=request, template_name="registration/login.html", context={"login_form": form})
 
 
 def view_register(request):
@@ -117,9 +117,9 @@ def view_register(request):
 
 @login_required
 def view_logout(request):
-  logout(request)
-  messages.info(request, "Se ha cerrado la sesión satisfactoriamente.")
-  return redirect('home')
+    logout(request)
+    messages.info(request, "Se ha cerrado la sesión satisfactoriamente.")
+    return redirect('login-customize')  # Redirect to your custom login view
 
 
 def custom_permission_denied(request, exception):
@@ -144,7 +144,7 @@ def dashboard(request):
         }
     )
 
-
+@login_required()
 def get_task_details(request, task_id):
     task = get_object_or_404(Task, id=task_id)
 

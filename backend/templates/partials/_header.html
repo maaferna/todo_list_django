@@ -1,4 +1,4 @@
-<header class="mb-0">
+<header class="mb-4">
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <div class="col-12 col-md-8">
@@ -32,14 +32,14 @@
                 <ul class="navbar-nav mr-auto">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Salir</a>
+                        <a class="nav-link" href="{% url 'logout-customize' %}">Salir</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">Hola, {{user.username}}</a>
                     </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                            <a class="nav-link" href="{% url 'login-customize' %}">Login</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'register' %}">Register</a>
