@@ -1,40 +1,38 @@
 <template>
-    <div>
-      <h2>Task List</h2>
-      <ul>
-        <li v-for="task in tasks" :key="task.id">
-          {{ task.title }}
-        </li>
-      </ul>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        tasks: [],
-      };
-    },
-    mounted() {
-      // Fetch tasks from your API endpoint
-      this.fetchTasks();
-    },
-    methods: {
-      async fetchTasks() {
-        try {
-          const response = await fetch('http://127.0.0.1:8000/serializer_tasks/');
-          const data = await response.json();
-          this.tasks = data;
-        } catch (error) {
-          console.error('Error fetching tasks:', error);
-        }
-      },
-    },
-  };
-  </script>
-  
-  <style scoped>
-  /* Add styling as needed */
-  </style>
-  
+  <div class="container">
+     <ul>
+       <li v-for="task in tasks" :key="task.id">
+         <div class="card">
+           <div class="card-body">
+             <h5 class="card-title">
+               <input v-model="task.title" placeholder="Edit Title" />
+             </h5>
+             <p class="card-text">
+               <input v-model="task.description" placeholder="Edit Description" />
+             </p>
+             <p class="card-text">
+               Priority: {{ task.priority }}
+             </p>
+             <p class="card-text">
+               Effort: {{ task.effort }}
+             </p>
+             <button @click="updateTask(task)" class="btn btn-primary">Update</button>
+           </div>
+         </div>
+       </li>
+     </ul>
+  </div>
+ </template>
+ 
+ <script>
+ export default {
+  props: {
+     tasks: Array,
+  },
+  methods: {
+     updateTask(task) {
+       this.$emit('updateTask', task);
+     },
+  },
+ };
+ </script>

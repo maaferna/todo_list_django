@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/HomePage.vue';
 import Login from '../views/Login.vue';
-import Register from '../views/Register.vue';
+import SignUp from '../views/SignUp.vue';
 import TaskListComponent from '../components/TaskListComponent.vue'
 import store from '../store'
 
@@ -9,12 +9,17 @@ import store from '../store'
 const routes = [
  { path: '/', name: 'Home', component: Home },
  { path: '/login', name: 'Login', component: Login },
- { path: '/register', name: 'Register', component: Register },
+ { path: '/sign-up', name: 'SignUp', component:SignUp },
  {
   path: '/api/v1/serializer_tasks/',
   name: 'SerializerTasks', 
   component: TaskListComponent,
-},
+  },
+  {
+    path: '/api/v1/tasks/create', // Define the desired URL for creating a new task
+    name: 'CreateTask', // Define a unique name for the route
+    component: TaskListComponent, // You can choose the appropriate component here
+  },
 ];
 
 const router = createRouter({
