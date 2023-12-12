@@ -21,7 +21,7 @@
             <div class="col-md-2 text-md-right">
               <label for="password">Password:</label>
             </div>
-            <div class="col-md-4">
+            <div class="col">
               <input v-model="password" type="password" id="password" required class="form-control">
             </div>
           </div>
@@ -51,28 +51,58 @@
  
  <script>
  // import store from '../store';
- 
+ import axios from 'axios';
+
  export default {
   name: 'LoginView',
   data() {
      return {
        username: '',
        password: '',
-       error: '',
-     };
+       errors: [],
+     }
+  },
+  mounted() {
+    document.title = 'Log In | To-Do'
   },
   methods: {
-     async submitForm() {
-       try {
-         // Simulate login logic
-         await new Promise((resolve) => setTimeout(resolve, 1000));
-         this.$store.dispatch('authenticate', true);
-         this.$router.push({ name: 'Home' });
-       } catch (error) {
-         // Handle the error, e.g., show an error message to the user
-         this.error = 'Incorrect username or password. Please try again.';
-       }
-     },
+    async submitForm() {
+            axios.defaults.headers.common["Authorization"] = ""
+
+            localStorage.removeItem("token")
+
+            const formData = {
+                username: this.username,
+                password: this.password
+            }
+
+            await axios
+                .post("http://127.0.0.1:8000/api/v1/token/login/", formData)
+                .then(response => {
+                    const token = response.data.auth_token
+
+                    this.$store.commit('setToken', token)
+                    
+                    axios.defaults.headers.common["Authorization"] = "Token " + token
+
+                    localStorage.setItem("token", token)
+
+                    const toPath = this.$route.query.to || '/'
+
+                    this.$router.push(toPath)
+                })
+                .catch(error => {
+                    if (error.response) {
+                        for (const property in error.response.data) {
+                            this.errors.push(`${property}: ${error.response.data[property]}`)
+                        }
+                    } else {
+                        this.errors.push('Something went wrong. Please try again')
+                        
+                        console.log(JSON.stringify(error))
+                    }
+                })
+        }
   },
  };
  </script>

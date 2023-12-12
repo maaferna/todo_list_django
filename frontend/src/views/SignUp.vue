@@ -132,4 +132,3 @@ import store from '../store';
     },
   }
  </script>
-  "
