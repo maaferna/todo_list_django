@@ -1,13 +1,12 @@
 <template>
   <div class="main mt-4">
-    <Header />
     <br>
-    <div class="container form-container mb-4">
+    <div class="container border p-3 mb-3 mt-3 bg-light text-dark">
       <div class="row mb-4">      
         <h2>Create New Task</h2>
       </div>  
       <div class="row mb-4">         
-        <form @submit.prevent="createTask" action="/api/v1/create-task/" method="post">
+        <form @submit.prevent="createTask">
           <div class="row mb-4">
             <input v-model="newTask.title" placeholder="Title" required />
           </div>
@@ -26,7 +25,7 @@
               </select>
             </div>
           </div>
-          <button @click="createTask(tasks)">Create Task</button>
+          <button @click="createTask">Create Task</button>
         </form>
       </div>  
     </div>
@@ -39,13 +38,10 @@
         <TaskListComponent :tasks="tasks" @updateTask="updateTask" />
       </div>
     </div>
-    <Footer />
   </div>
 </template>
 
 <script>
-import Header from '../components/partials/HeaderSection.vue';
-import Footer from '../components/partials/FooterSection.vue';
 import TaskListComponent from '../components/TaskListComponent.vue';
 import { ref, onMounted, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -54,8 +50,6 @@ import axios from 'axios';
 export default {
   name: 'HomeView',
   components: {
-    Header,
-    Footer,
     TaskListComponent,
   },
   setup() {
@@ -68,17 +62,10 @@ export default {
       effort: '',
     });
 
-    const fetchTasks = async () => {
-      try {
-        const apiUrl = import.meta.env.VUE_APP_API_BASE_URL || 'http://127.0.0.1:8000';
-        return apiUrl;
-      } catch (error) {
-        console.error('Error fetching API URL:', error);
-        throw error; // Re-throw the error to handle it further
-      }
+    const fetchTasks = () => {
+      return process.env.VUE_APP_API_BASE_URL;
     };
-
-
+    
     const isAuthenticated = computed(() => store.state.isAuthenticated);
 
     onMounted(async () => {
@@ -98,17 +85,27 @@ export default {
       try {
         const apiUrl = await fetchTasks(); // Await the result of fetchTasks
         const response = await axios.post(`${apiUrl}/api/v1/create-task/`, newTask.value);
-        tasks.value.push(response.data);
+        
+        // Assuming the response contains the created task data
+        const createdTask = response.data;
+
+        // Update the tasks array with the created task
+        tasks.value.push(createdTask);
+
+        // Reset the newTask object
         newTask.value = {
           title: '',
           description: '',
           priority: '',
           effort: '',
         };
+
+        console.log('Task created successfully:', createdTask);
       } catch (err) {
         console.error('Error creating task:', err);
       }
     };
+
 
     const updateTask = async (updatedTask) => {
       try {
