@@ -8,6 +8,7 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('get_task_details/<int:task_id>/', get_task_details, name='get_task_details'),
     path('serializer_tasks/', TasksList.as_view()),
+    path('create-task/<int:task_id>', TaskCreateView.as_view(), name='create-task'),
 ]
 
 handler403 = 'todo_app.views.custom_permission_denied'
