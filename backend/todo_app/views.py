@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -7,7 +7,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
 
+from rest_framework import status, authentication, permissions
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -159,9 +162,17 @@ def get_task_details(request, task_id):
 
     return JsonResponse({'details': task_details})
 
-
 class TasksList(APIView):
    def get(self, request, format=None):
       tasks = Task.objects.all()
       serializer = TaskSerializer(tasks, many=True)
       return Response(serializer.data)
+   
+class TaskCreateView(APIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+
+    def perform_create(self, serializer):
+        # Optionally, you can perform additional operations before saving the object.
+        # For example, set the owner of the task to the current user.
+        serializer.save(owner=self.request.user)
