@@ -1,17 +1,53 @@
 <template>
-  <div class="container">
-     <h1>Login</h1>
-     <form @submit.prevent="login">
-       <label for="username">Username:</label>
-       <input v-model="username" type="text" id="username" required>
-       <label for="password">Password:</label>
-       <input v-model="password" type="password" id="password" required>
-       <button type="submit">Login</button>
-     </form>
-     <p>{{ error }}</p>
-     <p>If you don't have an account, <router-link to="/sign-up">register here</router-link>.</p>
+  <div class="main mt-4">
+    <div class="container border p-3 mb-3 mt-3 bg-light text-dark">
+      <div class="row mb-4 text-center">
+        <div class="col">
+          <h1>Login</h1>
+        </div>
+      </div>
+      <div class="container mb-4">
+        <form @submit.prevent="submitForm">
+          <div class="row mb-4">
+            <div class="col-md-2 text-md-right col-md-auto">
+              <label for="username">Username:</label>
+            </div>
+            <div class="col">
+              <input v-model="username" type="text" id="username" required class="form-control">
+            </div>
+          </div>
+
+          <div class="row mb-4">
+            <div class="col-md-2 text-md-right">
+              <label for="password">Password:</label>
+            </div>
+            <div class="col-md-4">
+              <input v-model="password" type="password" id="password" required class="form-control">
+            </div>
+          </div>
+          <div class="row text-center">
+            <div class="col">
+              <button type="submit" class="button-submit">Sign Up</button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div v-if="errors.length" class="row mb-4">
+        <div class="col">
+          <div class="alert alert-danger" role="alert">
+            <p v-for="error in errors" :key="error">{{ error }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="row text-center">
+        <div class="col">
+          <p>If you already have an account, <router-link to="/login">login here</router-link>.</p>
+        </div>
+      </div>
+    </div>
   </div>
- </template>
+</template>
+
  
  <script>
  // import store from '../store';
@@ -26,7 +62,7 @@
      };
   },
   methods: {
-     async login() {
+     async submitForm() {
        try {
          // Simulate login logic
          await new Promise((resolve) => setTimeout(resolve, 1000));
