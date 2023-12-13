@@ -169,10 +169,9 @@ class TasksList(APIView):
       return Response(serializer.data)
    
 class TaskCreateView(APIView):
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-
-    def perform_create(self, serializer):
-        # Optionally, you can perform additional operations before saving the object.
-        # For example, set the owner of the task to the current user.
-        serializer.save(owner=self.request.user)
+    def post(self, request, *args, **kwargs):
+        serializer = TaskSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -163,6 +163,7 @@ LOGIN_URL = 'login-customize'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
+    "http://localhost:8082",
 ]
 
 # Optional: Allow cookies to be included in cross-origin requests
