@@ -16,16 +16,21 @@
           <div class="row mb-4">
             <div class="col-6">
               <select v-model="newTask.priority">
-                <option v-for="(value, label) in priorityChoices" :key="value" :value="value">{{ label }}</option>
+                <option v-for="value in priorityChoices" :key="value" :value="value">{{ value[1] }}</option>
               </select>
             </div>
             <div class="col-6">
               <select v-model="newTask.effort">
-                <option v-for="(value, label) in effortChoices" :key="value" :value="value">{{ label }}</option>
+                <option v-for="value in effortChoices" :key="value" :value="value">{{ value[1] }}</option>
               </select>
             </div>
           </div>
-          <button @click="createTask">Create Task</button>
+          <div v-if="isAuthenticated">
+            <button class="submitButton">Create Task</button>
+          </div>
+          <div v-else>
+              <p>Please log in to create tasks.</p>
+          </div>
         </form>
       </div>  
     </div>
@@ -60,12 +65,13 @@ export default {
       description: '',
       priority: '',
       effort: '',
+      completed: false,
     });
 
     const fetchTasks = () => {
       return process.env.VUE_APP_API_BASE_URL;
     };
-    
+
     const isAuthenticated = computed(() => store.state.isAuthenticated);
 
     onMounted(async () => {
@@ -82,27 +88,33 @@ export default {
     });
 
     const createTask = async () => {
-      try {
-        const apiUrl = await fetchTasks(); // Await the result of fetchTasks
-        const response = await axios.post(`${apiUrl}/api/v1/create-task/`, newTask.value);
-        
-        // Assuming the response contains the created task data
-        const createdTask = response.data;
+      if (isAuthenticated.value) {
+        try {
+          const apiUrl = await fetchTasks(); // Await the result of fetchTasks
+          console.log(newTask.value);
+          const response = await axios.post(`${apiUrl}/create-task/`, newTask.value);
+          
+          // Assuming the response contains the created task data
+          const createdTask = response.data;
 
-        // Update the tasks array with the created task
-        tasks.value.push(createdTask);
+          // Update the tasks array with the created task
+          tasks.value.push(createdTask);
 
-        // Reset the newTask object
-        newTask.value = {
-          title: '',
-          description: '',
-          priority: '',
-          effort: '',
-        };
+          // Reset the newTask object
+          newTask.value = {
+            title: '',
+            description: '',
+            priority: '',
+            effort: '',
+            completed: false,
 
-        console.log('Task created successfully:', createdTask);
-      } catch (err) {
-        console.error('Error creating task:', err);
+          };
+          console.log(newTask);
+
+          console.log('Task created successfully:', createdTask);
+        } catch (err) {
+          console.error('Error creating task:', err);
+        }
       }
     };
 
@@ -113,6 +125,7 @@ export default {
         await axios.put(`${apiUrl}/serializer_tasks/${updatedTask.id}/`, updatedTask);
       } catch (err) {
         console.error('Error updating task:', err);
+        alert('An error occurred while creating the task. Please try again.');
       }
     };
 
@@ -142,4 +155,6 @@ export default {
 
 <style lang="css" scoped>
 @import "@/styles/base.css";
+@import "@/styles/components/button.css";
+
 </style>
