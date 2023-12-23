@@ -57,6 +57,13 @@ export default {
   components: {
     TaskListComponent,
   },
+
+
+  
+  created() {
+    // Call the initializeStore mutation when the component is created
+    this.$store.commit('initializeStore');
+  },
   setup() {
     const store = useStore();
     const tasks = ref([]);
@@ -66,18 +73,23 @@ export default {
       priority: '',
       effort: '',
       completed: false,
+      user: null, // Assign the user data here
     });
+
+    // const csrfToken = ref(null);
 
     const fetchTasks = () => {
       return process.env.VUE_APP_API_BASE_URL;
     };
 
     const isAuthenticated = computed(() => store.state.isAuthenticated);
+    const currentUser = computed(() => store.state.user); // Retrieve current user from store
+    console.log(currentUser);
 
     onMounted(async () => {
       if (isAuthenticated.value) {
         try {
-          const apiUrl = await fetchTasks(); // Await the result of fetchTasks
+          const apiUrl = await fetchTasks();
           const response = await axios.get(`${apiUrl}/serializer_tasks/`);
           tasks.value = response.data;
           console.log(tasks.value);
@@ -87,45 +99,82 @@ export default {
       }
     });
 
+/*     const getCsrfToken = async () => {
+      try {
+        const apiUrl = await fetchTasks();
+        const response = await axios.get(`${apiUrl}/get-csrf-token/`);
+        csrfToken.value = response.data.csrf_token;
+      } catch (error) {
+        console.error('Error fetching CSRF token:', error);
+      }
+    }; */
+
     const createTask = async () => {
       if (isAuthenticated.value) {
         try {
-          const apiUrl = await fetchTasks(); // Await the result of fetchTasks
-          console.log(newTask.value);
-          const response = await axios.post(`${apiUrl}/create-task/`, newTask.value);
-          
-          // Assuming the response contains the created task data
+          const token = store.state.token;
+          axios.defaults.headers.common['Authorization'] = `Token ${token}`;
+          console.log('Token:', localStorage.getItem('token'));
+          console.log('Token retrieved from Vuex:', token);
+          console.log('Authorization header:', axios.defaults.headers.common['Authorization']);
+          const apiUrl = process.env.VUE_APP_API_BASE_URL;
+
+          // Set the Authorization header with the token
+          //const userDataResponse = await axios.get(`${apiUrl}/get-user-data/`);
+          // const userData = userDataResponse.data;
+          // newTask.value.user = userData;
+
+
+          // Assign user data to 
+          // console.log(userData);
+
+            // Update the newTask object with user data
+          newTask.value = {
+            "title": "Testing",
+            "description": "Some text 4",
+            "completed": false,
+            "priority": "important",
+            "effort": "low",
+            "user": 1
+          };
+
+          console.log('New Task:', newTask.value);
+
+          const response = await axios.post(`${apiUrl}/create-task/`, newTask);
+
           const createdTask = response.data;
 
-          // Update the tasks array with the created task
           tasks.value.push(createdTask);
 
-          // Reset the newTask object
+          // Reset newTask after creating the task
           newTask.value = {
             title: '',
             description: '',
             priority: '',
             effort: '',
             completed: false,
-
+            user: null,
           };
-          console.log(newTask);
 
           console.log('Task created successfully:', createdTask);
         } catch (err) {
           console.error('Error creating task:', err);
+          if (err.response) {
+            console.log('Response data:', err.response.data);
+            console.log('Response status:', err.response.status);
+            console.log('Response headers:', err.response.headers);
+          }
         }
       }
     };
 
-
     const updateTask = async (updatedTask) => {
       try {
-        const apiUrl = await fetchTasks(); // Await the result of fetchTasks
+        const apiUrl = await fetchTasks();
         await axios.put(`${apiUrl}/serializer_tasks/${updatedTask.id}/`, updatedTask);
       } catch (err) {
         console.error('Error updating task:', err);
-        alert('An error occurred while creating the task. Please try again.');
+        alert('An error occurred while updating the task. Please try again.');
       }
     };
 
