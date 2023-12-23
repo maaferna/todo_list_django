@@ -8,13 +8,14 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.middleware.csrf import get_token
 
 from rest_framework import status, authentication, permissions
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .serializers import TaskSerializer
+from .serializers import *
 from .models import Task
 from .forms import *
 
@@ -175,3 +176,15 @@ class TaskCreateView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+def get_csrf_token(request):
+    return JsonResponse({'csrf_token': get_token(request)})
+
+@api_view(['GET'])
+def current_user(request):
+    if request.user.is_authenticated:
+        serialized_user = UserSerializer(request.user)
+        return Response(serialized_user.data)
+    else:
+        return Response({'error': 'User not authenticated'}, status=401)
