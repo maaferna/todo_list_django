@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     # Modules
     'todo_app.apps.TodoAppConfig',
+    'domoArigatoMisterRoboto.apps.DomoarigatomisterrobotoConfig'
 ]
 
 MIDDLEWARE = [
