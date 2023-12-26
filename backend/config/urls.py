@@ -10,4 +10,5 @@ urlpatterns = [
     path('register', view_register, name="register"),
     path('api/v1/', include('djoser.urls')),
     path('api/v1/', include('djoser.urls.authtoken')),
+    path('damrn/', include('domoArigatoMisterRoboto.urls')),
 ]
