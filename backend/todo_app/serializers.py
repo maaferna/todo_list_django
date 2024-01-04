@@ -11,3 +11,8 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email']
+
+    def to_representation(self, instance):
+        rep = super(UserSerializer, self).to_representation(instance)
+        rep['username'] = str(instance.username)
+        return rep
