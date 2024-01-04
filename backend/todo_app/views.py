@@ -183,6 +183,8 @@ def get_csrf_token(request):
 
 @api_view(['GET'])
 def current_user(request):
+    print('Authorization header:', request.headers.get('Authorization'))
+
     if request.user.is_authenticated:
         serialized_user = UserSerializer(request.user)
         return Response(serialized_user.data)
