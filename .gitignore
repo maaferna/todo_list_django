@@ -1,0 +1,10 @@
+# Secrets: never commit real environment files
+.env
+*/.env
+
+# Local artifacts
+*.sqlite3
+__pycache__/
+*.pyc
+node_modules/
+staticfiles/
