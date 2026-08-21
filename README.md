@@ -1,5 +1,11 @@
 # To Do List — Task Tracker (Django + Vue)
 
+> **Archived (August 2026).** This is the original 2023 standalone version (Django REST +
+> Djoser token auth + Vue.js frontend), kept for reference. The maintained version runs as
+> the `todo_app` module of my portfolio — try it live, no account needed:
+> **[portfolio-mparraf.herokuapp.com/todo/demo](https://portfolio-mparraf.herokuapp.com/todo/demo/)**
+> · project page: [/projects/8](https://portfolio-mparraf.herokuapp.com/projects/8/)
+
 Full-stack task tracker with token-based authentication: a Django REST Framework
 backend and a Vue.js frontend.
 
